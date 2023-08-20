@@ -15,21 +15,21 @@ keeper=$(jq -r '.keeper' $PRESET_PATH)
 
 ##### L2 #####
 
-TestUSDC=$(jq -r '.L2.TestUSDC' $CONTRACT_PATH)
-Market=$(jq -r '.L2.Market' $CONTRACT_PATH)
-TokenInfo=$(jq -r '.L2.TokenInfo' $CONTRACT_PATH)
-L2Vault=$(jq -r '.L2.L2Vault' $CONTRACT_PATH)
-L2MarginGateway=$(jq -r '.L2.L2MarginGateway' $CONTRACT_PATH)
-RisePoolUtils=$(jq -r '.L2.RisePoolUtils' $CONTRACT_PATH)
-L2LiquidityGateway=$(jq -r '.L2.L2LiquidityGateway' $CONTRACT_PATH)
+# TestUSDC=$(jq -r '.L2.TestUSDC' $CONTRACT_PATH)
+# Market=$(jq -r '.L2.Market' $CONTRACT_PATH)
+# TokenInfo=$(jq -r '.L2.TokenInfo' $CONTRACT_PATH)
+# L2Vault=$(jq -r '.L2.L2Vault' $CONTRACT_PATH)
+# L2MarginGateway=$(jq -r '.L2.L2MarginGateway' $CONTRACT_PATH)
+# RisePoolUtils=$(jq -r '.L2.RisePoolUtils' $CONTRACT_PATH)
+# L2LiquidityGateway=$(jq -r '.L2.L2LiquidityGateway' $CONTRACT_PATH)
 
-npx hardhat verify --network $L2Network --contract contracts/token/TestUSDC.sol:TestUSDC $TestUSDC
-npx hardhat verify --network $L2Network --contract contracts/market/Market.sol:Market $Market
-npx hardhat verify --network $L2Network --contract contracts/market/TokenInfo.sol:TokenInfo $TokenInfo "$Market"
-npx hardhat verify --network $L2Network --contract contracts/crosschain/L2Vault.sol:L2Vault $L2Vault
-npx hardhat verify --network $L2Network --contract contracts/crosschain/L2MarginGateway.sol:L2MarginGateway $L2MarginGateway "$inbox" "$L2Vault" "$TokenInfo"
-npx hardhat verify --network $L2Network --contract contracts/risepool/RisePoolUtils.sol:RisePoolUtils $RisePoolUtils
-npx hardhat verify --network $L2Network --contract contracts/crosschain/L2LiquidityGateway.sol:L2LiquidityGateway $L2LiquidityGateway "$inbox" "$L2Vault" "$Market" "$RisePoolUtils"
+# npx hardhat verify --network $L2Network --contract contracts/token/TestUSDC.sol:TestUSDC $TestUSDC
+# npx hardhat verify --network $L2Network --contract contracts/market/Market.sol:Market $Market
+# npx hardhat verify --network $L2Network --contract contracts/market/TokenInfo.sol:TokenInfo $TokenInfo "$Market"
+# npx hardhat verify --network $L2Network --contract contracts/crosschain/L2Vault.sol:L2Vault $L2Vault
+# npx hardhat verify --network $L2Network --contract contracts/crosschain/L2MarginGateway.sol:L2MarginGateway $L2MarginGateway "$inbox" "$L2Vault" "$TokenInfo"
+# npx hardhat verify --network $L2Network --contract contracts/risepool/RisePoolUtils.sol:RisePoolUtils $RisePoolUtils
+# npx hardhat verify --network $L2Network --contract contracts/crosschain/L2LiquidityGateway.sol:L2LiquidityGateway $L2LiquidityGateway "$inbox" "$L2Vault" "$Market" "$RisePoolUtils"
 
 
 ##### L3 #####
