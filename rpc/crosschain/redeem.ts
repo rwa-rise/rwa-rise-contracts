@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
-import { Network } from "../utils/network";
-import { getContract, getReadonlyContract } from "../utils/getContract";
-import { getContractAddress } from "../utils/getContractAddress";
+import { Network } from "../../utils/network";
+import { getContract, getReadonlyContract } from "../../utils/getContract";
+import { getContractAddress } from "../../utils/getContractAddress";
 import {
   fetchL3EventLogs,
   L3EventType,

@@ -1,6 +1,6 @@
 import * as fs from "fs";
-import { deployContract } from "../utils/deployer";
-import { getPresetAddress } from "../utils/getPresetAddress";
+import { deployContract } from "../../utils/deployer";
+import { getPresetAddress } from "../../utils/getPresetAddress";
 
 export type L2Addresses = {
   TestUSDC: string;
@@ -71,7 +71,7 @@ async function deployL2Contracts(): Promise<L2Addresses> {
     L2LiquidityGateway: l2LiquidityGateway.address,
   };
 
-  const _filePath = __dirname + "/output/contractAddresses.json";
+  const _filePath = __dirname + "/../output/contractAddresses.json";
 
   fs.writeFileSync(_filePath, JSON.stringify({ L2: l2Addresses }, null, 2), {
     flag: "w",

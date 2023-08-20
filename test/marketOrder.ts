@@ -11,47 +11,16 @@ import {
   formatPositionRecord,
   formatGlobalPositionState,
 } from "../utils/formatter";
+import { Constants } from "../utils/constants";
+import { Params } from "../utils/params";
 
-const USDC_ID = 0;
-const ETH_ID = 1;
-const ETH_USDC_MARKET_ID = 1;
-
-const USDC_DECIMALS = 20;
-const ETH_DECIMALS = 18;
-const PRICE_BUFFER_DECIMALS = 10;
-const PRICE_BUFFER_DELTA_MULTIPLIER_DECIMALS = 10;
-
-// TODO:check if we need multiplier for USDC
-const USDC_MULTIPLIER = ethers.utils.parseUnits(
-  "1",
-  PRICE_BUFFER_DELTA_MULTIPLIER_DECIMALS
-);
-const ETH_MULTIPLIER = ethers.utils.parseUnits(
-  "0.0001",
-  PRICE_BUFFER_DELTA_MULTIPLIER_DECIMALS
-);
-const ETH_USDC_MARKET_TICK_SIZE = 1e8;
-
-const ETH_USDC_MARKET_FUNDING_RATE_MULTIPLIER = "0.001";
-const FUNDING_RATE_MULTIPLIER_DECIMALS = 10;
-const FUNDING_RATE_DECIMALS = 16;
-
+const c = new Constants();
+const p = new Params();
 // case: 1000 ETH OI difference
 // price buffer = (OI difference) * (ETH multiplier) = 1000 * 0.0001 = 0.1
 // set price buffer rate to be 0.01% for 1000 ETH OI difference -> 0.01 / 100 = 0.0001
 // price buffer rate = (funding rate multiplier) * (price buffer) = 0.001 * 0.1 = 0.0001
 // funding rate multiplier for ETH USDC market = 0.001
-
-const DEPOSIT_AMOUNT = ethers.utils.parseUnits("500000", USDC_DECIMALS);
-
-const LONG_LIQUIDITY_AMOUNT = ethers.utils.parseUnits("20000", ETH_DECIMALS);
-const SHORT_LIQUIDITY_AMOUNT = ethers.utils.parseUnits(
-  "40000000",
-  USDC_DECIMALS
-);
-
-const MAX_LONG_CAPACITY = ethers.utils.parseUnits("15000", ETH_DECIMALS);
-const MAX_SHORT_CAPACITY = ethers.utils.parseUnits("15000", ETH_DECIMALS);
 
 describe("Place and Execute Market Order", function () {
   async function getContext() {
@@ -64,40 +33,37 @@ describe("Place and Execute Market Order", function () {
 
   async function _registerTokens(ctx: any) {
     // register & set token data (USDC)
-    await ctx.tokenInfo.registerToken(ctx.testUSDC, USDC_DECIMALS);
+    await ctx.tokenInfo.registerToken(ctx.testUSDC, c.USDC_DECIMALS);
     const testUSDCAssetId = await ctx.tokenInfo.getAssetIdFromTokenAddress(
       ctx.testUSDC
     );
     await ctx.tokenInfo.setSizeToPriceBufferDeltaMultiplier(
       testUSDCAssetId,
-      USDC_MULTIPLIER
+      p.USDC_MULTIPLIER
     );
 
     // register & set token data (ETH)
-    await ctx.tokenInfo.registerToken(ctx.weth, ETH_DECIMALS);
+    await ctx.tokenInfo.registerToken(ctx.weth, c.ETH_DECIMALS);
     const wethAssetId = await ctx.tokenInfo.getAssetIdFromTokenAddress(
       ctx.weth
     );
     await ctx.tokenInfo.setSizeToPriceBufferDeltaMultiplier(
       wethAssetId,
-      ETH_MULTIPLIER
+      p.ETH_MULTIPLIER
     );
   }
 
   // listing ETH/USDC perps market
   async function _listPerpMarket(ctx: any) {
     let m = {
-      marketId: ETH_USDC_MARKET_ID,
-      priceTickSize: ETH_USDC_MARKET_TICK_SIZE,
-      baseAssetId: ETH_ID,
-      quoteAssetId: USDC_ID,
-      longReserveAssetId: ETH_ID,
-      shortReserveAssetId: USDC_ID,
-      marginAssetId: USDC_ID,
-      fundingRateMultiplier: ethers.utils.parseUnits(
-        ETH_USDC_MARKET_FUNDING_RATE_MULTIPLIER,
-        FUNDING_RATE_MULTIPLIER_DECIMALS
-      ),
+      marketId: c.ETH_USDC_MARKET_ID,
+      priceTickSize: c.ETH_USDC_MARKET_TICK_SIZE,
+      baseAssetId: c.ETH_ID,
+      quoteAssetId: c.USDC_ID,
+      longReserveAssetId: c.ETH_ID,
+      shortReserveAssetId: c.USDC_ID,
+      marginAssetId: c.USDC_ID,
+      fundingRateMultiplier: p.ETH_USDC_MARKET_FUNDING_RATE_MULTIPLIER,
     };
 
     await ctx.listingManager.createRisePerpsMarket(m);
@@ -106,14 +72,14 @@ describe("Place and Execute Market Order", function () {
   // add liquidity (Long reserve token)
   async function _addLiquidities(ctx: any) {
     await ctx.risePool.addLiquidity(
-      ETH_USDC_MARKET_ID,
+      c.ETH_USDC_MARKET_ID,
       true,
-      LONG_LIQUIDITY_AMOUNT
+      p.LONG_LIQUIDITY_AMOUNT
     );
     await ctx.risePool.addLiquidity(
-      ETH_USDC_MARKET_ID,
+      c.ETH_USDC_MARKET_ID,
       false,
-      SHORT_LIQUIDITY_AMOUNT
+      p.SHORT_LIQUIDITY_AMOUNT
     );
   }
 
@@ -122,33 +88,33 @@ describe("Place and Execute Market Order", function () {
   async function _depositMargin(ctx: any, amount: any) {
     await ctx.traderVault
       .connect(ctx.trader)
-      .increaseTraderBalance(ctx.trader.address, USDC_ID, amount);
+      .increaseTraderBalance(ctx.trader.address, c.USDC_ID, amount);
   }
 
   async function _setMarketMaxCapacities(ctx: any) {
     await ctx.positionVault.setMaxLongCapacity(
-      ETH_USDC_MARKET_ID,
-      MAX_LONG_CAPACITY
+      c.ETH_USDC_MARKET_ID,
+      p.MAX_LONG_CAPACITY
     );
     await ctx.positionVault.setMaxShortCapacity(
-      ETH_USDC_MARKET_ID,
-      MAX_SHORT_CAPACITY
+      c.ETH_USDC_MARKET_ID,
+      p.MAX_SHORT_CAPACITY
     );
   }
 
   async function _initializeFunding(ctx: any) {
-    ctx.funding._initializeFundingForMarket(ETH_USDC_MARKET_ID);
+    ctx.funding._initializeFundingForMarket(c.ETH_USDC_MARKET_ID);
   }
 
   async function _setFundingIndex(ctx: any) {
-    ctx.funding.updateFundingIndex(ETH_USDC_MARKET_ID);
+    ctx.funding.updateFundingIndex(c.ETH_USDC_MARKET_ID);
   }
 
   async function initialize(ctx: any) {
     await _registerTokens(ctx);
     await _listPerpMarket(ctx);
     await _addLiquidities(ctx);
-    await _depositMargin(ctx, DEPOSIT_AMOUNT);
+    await _depositMargin(ctx, p.DEPOSIT_AMOUNT);
     await _setMarketMaxCapacities(ctx);
     await _initializeFunding(ctx);
   }
@@ -158,16 +124,16 @@ describe("Place and Execute Market Order", function () {
     await initialize(ctx);
 
     const fundingRate0 = await ctx.funding._getFundingRatePerHour(
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
 
     expect(fundingRate0).to.be.equal(
-      ethers.utils.parseUnits("0.00001", FUNDING_RATE_DECIMALS)
+      ethers.utils.parseUnits("0.00001", c.FUNDING_RATE_DECIMALS)
     );
 
     // registered token info
     const testUSDCAssetId = await ctx.tokenInfo.getAssetIdFromTokenAddress(
-      ctx.testUSDC
+      ctx.testUSDCAddress
     );
     const testUSDCDecimal = await ctx.tokenInfo.getTokenDecimals(
       testUSDCAssetId
@@ -175,56 +141,56 @@ describe("Place and Execute Market Order", function () {
     const testUSDCPriceBufferDeltaMultiplier =
       await ctx.tokenInfo.getSizeToPriceBufferDeltaMultiplier(testUSDCAssetId);
     const wethAssetId = await ctx.tokenInfo.getAssetIdFromTokenAddress(
-      ctx.weth
+      ctx.wethAddress
     );
     const wethDecimal = await ctx.tokenInfo.getTokenDecimals(wethAssetId);
     const wethPriceBufferDeltaMultiplier =
       await ctx.tokenInfo.getSizeToPriceBufferDeltaMultiplier(wethAssetId);
 
-    expect(testUSDCAssetId).to.equal(USDC_ID);
-    expect(testUSDCDecimal).to.equal(USDC_DECIMALS);
-    expect(testUSDCPriceBufferDeltaMultiplier).to.equal(USDC_MULTIPLIER);
-    expect(wethAssetId).to.equal(ETH_ID);
-    expect(wethDecimal).to.equal(ETH_DECIMALS);
-    expect(wethPriceBufferDeltaMultiplier).to.equal(ETH_MULTIPLIER);
+    expect(testUSDCAssetId).to.equal(c.USDC_ID);
+    expect(testUSDCDecimal).to.equal(c.USDC_DECIMALS);
+    expect(testUSDCPriceBufferDeltaMultiplier).to.equal(p.USDC_MULTIPLIER);
+    expect(wethAssetId).to.equal(c.ETH_ID);
+    expect(wethDecimal).to.equal(c.ETH_DECIMALS);
+    expect(wethPriceBufferDeltaMultiplier).to.equal(p.ETH_MULTIPLIER);
 
     // perps market info
-    const marketInfo = await ctx.market.getMarketInfo(ETH_USDC_MARKET_ID);
-    expect(marketInfo.marketId).to.equal(ETH_USDC_MARKET_ID);
+    const marketInfo = await ctx.market.getMarketInfo(c.ETH_USDC_MARKET_ID);
+    expect(marketInfo.marketId).to.equal(c.ETH_USDC_MARKET_ID);
     expect(marketInfo.priceTickSize).to.equal(10 ** 8);
-    expect(marketInfo.baseAssetId).to.equal(ETH_ID);
-    expect(marketInfo.quoteAssetId).to.equal(USDC_ID);
-    expect(marketInfo.longReserveAssetId).to.equal(ETH_ID);
-    expect(marketInfo.shortReserveAssetId).to.equal(USDC_ID);
-    expect(marketInfo.marginAssetId).to.equal(USDC_ID);
+    expect(marketInfo.baseAssetId).to.equal(c.ETH_ID);
+    expect(marketInfo.quoteAssetId).to.equal(c.USDC_ID);
+    expect(marketInfo.longReserveAssetId).to.equal(c.ETH_ID);
+    expect(marketInfo.shortReserveAssetId).to.equal(c.USDC_ID);
+    expect(marketInfo.marginAssetId).to.equal(c.USDC_ID);
     expect(marketInfo.fundingRateMultiplier).to.equal(0.001 * 1e10);
 
     // pool liquidity
     const ethUsdcLongPoolAmount = await ctx.risePool.getLongPoolAmount(
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
     const ethUsdcShortPoolAmount = await ctx.risePool.getShortPoolAmount(
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
-    expect(ethUsdcLongPoolAmount).to.equal(LONG_LIQUIDITY_AMOUNT);
-    expect(ethUsdcShortPoolAmount).to.equal(SHORT_LIQUIDITY_AMOUNT);
+    expect(ethUsdcLongPoolAmount).to.equal(p.LONG_LIQUIDITY_AMOUNT);
+    expect(ethUsdcShortPoolAmount).to.equal(p.SHORT_LIQUIDITY_AMOUNT);
 
     // trader margin balance
     const traderBalance = await ctx.traderVault.getTraderBalance(
       ctx.trader.address,
-      USDC_ID
+      c.USDC_ID
     );
-    expect(traderBalance).to.equal(DEPOSIT_AMOUNT);
+    expect(traderBalance).to.equal(p.DEPOSIT_AMOUNT);
 
     // market max cap
     const maxLongCapacity = await ctx.positionVault.maxLongCapacity(
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
     const maxShortCapacity = await ctx.positionVault.maxShortCapacity(
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
-    expect(maxLongCapacity).to.equal(MAX_LONG_CAPACITY);
-    expect(maxShortCapacity).to.equal(MAX_SHORT_CAPACITY);
+    expect(maxLongCapacity).to.equal(p.MAX_LONG_CAPACITY);
+    expect(maxShortCapacity).to.equal(p.MAX_SHORT_CAPACITY);
   });
 
   it("1. Execute market order", async function () {
@@ -233,15 +199,15 @@ describe("Place and Execute Market Order", function () {
 
     const traderBalance0 = await ctx.traderVault.getTraderBalance(
       ctx.trader.address,
-      USDC_ID
+      c.USDC_ID
     );
     console.log("traderBalance:", formatUSDC(traderBalance0), "USDC");
-    expect(traderBalance0).to.equal(DEPOSIT_AMOUNT);
+    expect(traderBalance0).to.equal(p.DEPOSIT_AMOUNT);
 
     // set price
     await ctx.priceManager.setPrice(
-      ETH_USDC_MARKET_ID,
-      ethers.utils.parseUnits("1950", USDC_DECIMALS)
+      c.ETH_USDC_MARKET_ID,
+      ethers.utils.parseUnits("1950", c.USDC_DECIMALS)
     ); // 1950 USD per ETH
 
     console.log(
@@ -253,45 +219,51 @@ describe("Place and Execute Market Order", function () {
       isLong: true,
       isIncrease: true,
       orderType: 0, // TODO:check solidity enum
-      marketId: ETH_USDC_MARKET_ID,
-      sizeAbs: ethers.utils.parseUnits("100", ETH_DECIMALS),
-      marginAbs: ethers.utils.parseUnits("10000", USDC_DECIMALS),
+      marketId: c.ETH_USDC_MARKET_ID,
+      sizeAbs: ethers.utils.parseUnits("100", c.ETH_DECIMALS),
+      marginAbs: ethers.utils.parseUnits("10000", c.USDC_DECIMALS),
       limitPrice: 0,
     };
 
     // (temp) get Mark Price
-    const markPrice1 = await ctx.priceManager.getMarkPrice(ETH_USDC_MARKET_ID);
+    const markPrice1 = await ctx.priceManager.getMarkPrice(
+      c.ETH_USDC_MARKET_ID
+    );
 
     // before the market order submission
-    expect(markPrice1).to.equal(ethers.utils.parseUnits("1950", USDC_DECIMALS));
+    expect(markPrice1).to.equal(
+      ethers.utils.parseUnits("1950", c.USDC_DECIMALS)
+    );
 
     await ctx.orderRouter.connect(ctx.trader).placeMarketOrder(orderRequest1);
     await _setFundingIndex(ctx); // TODO: currently setting after order execution. make it automatic.
 
     const priceBuffer1 = await ctx.priceManager.getPriceBuffer(
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
     expect(priceBuffer1).to.equal(
-      ethers.utils.parseUnits("0.01", PRICE_BUFFER_DECIMALS)
+      ethers.utils.parseUnits("0.01", c.PRICE_BUFFER_DECIMALS)
     );
 
     // (temp) get Mark Price
-    const markPrice2 = await ctx.priceManager.getMarkPrice(ETH_USDC_MARKET_ID);
+    const markPrice2 = await ctx.priceManager.getMarkPrice(
+      c.ETH_USDC_MARKET_ID
+    );
     expect(markPrice2).to.be.equal(
-      ethers.utils.parseUnits("1969.5", USDC_DECIMALS)
+      ethers.utils.parseUnits("1969.5", c.USDC_DECIMALS)
     );
 
     const key1 = await ctx.orderUtils._getPositionKey(
       ctx.trader.address,
       true, // isLong
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
 
     const position1 = await ctx.positionVault.getPosition(key1);
     console.log("\nposition:", formatPosition(position1));
 
     expect(position1.avgOpenPrice).to.be.equal(
-      ethers.utils.parseUnits("1959.75", USDC_DECIMALS)
+      ethers.utils.parseUnits("1959.75", c.USDC_DECIMALS)
     );
 
     const orderRecord1 = await ctx.orderHistory.orderRecords(
@@ -301,7 +273,7 @@ describe("Place and Execute Market Order", function () {
     console.log("\norderRecord:", formatOrderRecord(orderRecord1));
 
     expect(orderRecord1.executionPrice).to.be.equal(
-      ethers.utils.parseUnits("1959.75", USDC_DECIMALS)
+      ethers.utils.parseUnits("1959.75", c.USDC_DECIMALS)
     );
 
     /// avgExecPrice
@@ -310,44 +282,44 @@ describe("Place and Execute Market Order", function () {
     /// avgPriceBuffer = {(Last Long Short OI Diff) + (priceBuffer) / 2} => 9.75
 
     const globalPositionState1 =
-      await ctx.globalState.getGlobalLongPositionState(ETH_USDC_MARKET_ID);
+      await ctx.globalState.getGlobalLongPositionState(c.ETH_USDC_MARKET_ID);
     console.log(
       "\nglobalPositionState:",
       formatGlobalPositionState(globalPositionState1)
     );
 
     expect(globalPositionState1.totalSize).to.be.equal(
-      ethers.utils.parseUnits("100", ETH_DECIMALS)
+      ethers.utils.parseUnits("100", c.ETH_DECIMALS)
     );
     expect(globalPositionState1.totalMargin).to.be.equal(
-      ethers.utils.parseUnits("10000", USDC_DECIMALS)
+      ethers.utils.parseUnits("10000", c.USDC_DECIMALS)
     );
     expect(globalPositionState1.avgPrice).to.be.equal(
-      ethers.utils.parseUnits("1959.75", USDC_DECIMALS)
+      ethers.utils.parseUnits("1959.75", c.USDC_DECIMALS)
     );
 
     const traderBalance1 = await ctx.traderVault.getTraderBalance(
       ctx.trader.address,
-      USDC_ID
+      c.USDC_ID
     );
 
     // position fee rate = 0.05%
     // size = 100 ETH, execPrice = 1959.75
     // cumulative position fee = 100 * 1959.75 * 0.0005 = 97.9875
     expect(traderBalance1).to.be.equal(
-      DEPOSIT_AMOUNT.sub(ethers.utils.parseUnits("10000", USDC_DECIMALS)).sub(
-        ethers.utils.parseUnits("97.9875", USDC_DECIMALS)
-      )
+      p.DEPOSIT_AMOUNT.sub(
+        ethers.utils.parseUnits("10000", c.USDC_DECIMALS)
+      ).sub(ethers.utils.parseUnits("97.9875", c.USDC_DECIMALS))
     );
 
     const tokenReserveAmount1 = await ctx.risePool.getLongReserveAmount(
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
 
     console.log("\ntokenReserveAmount:", formatETH(tokenReserveAmount1), "ETH");
 
     expect(tokenReserveAmount1).to.be.equal(
-      ethers.utils.parseUnits("100", ETH_DECIMALS)
+      ethers.utils.parseUnits("100", c.ETH_DECIMALS)
     );
 
     const positionRecord1 = await ctx.positionHistory.positionRecords(
@@ -359,11 +331,11 @@ describe("Place and Execute Market Order", function () {
 
     // check avgOpenPrice
     expect(positionRecord1.avgOpenPrice).to.be.equal(
-      ethers.utils.parseUnits("1959.75", USDC_DECIMALS)
+      ethers.utils.parseUnits("1959.75", c.USDC_DECIMALS)
     );
     // check avgClose Price
     expect(positionRecord1.avgClosePrice).to.be.equal(
-      ethers.utils.parseUnits("0", USDC_DECIMALS)
+      ethers.utils.parseUnits("0", c.USDC_DECIMALS)
     );
 
     console.log(
@@ -372,31 +344,35 @@ describe("Place and Execute Market Order", function () {
 
     // priceBuffer not changed at this point
     const priceBuffer2 = await ctx.priceManager.getPriceBuffer(
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
     expect(priceBuffer2).to.equal(
-      ethers.utils.parseUnits("0.01", PRICE_BUFFER_DECIMALS)
+      ethers.utils.parseUnits("0.01", c.PRICE_BUFFER_DECIMALS)
     );
-    const markPrice3 = await ctx.priceManager.getMarkPrice(ETH_USDC_MARKET_ID);
+    const markPrice3 = await ctx.priceManager.getMarkPrice(
+      c.ETH_USDC_MARKET_ID
+    );
 
     // before the market order submission
     // Global Mark Price not has been changed as well
     expect(markPrice3).to.equal(
-      ethers.utils.parseUnits("1969.5", USDC_DECIMALS)
+      ethers.utils.parseUnits("1969.5", c.USDC_DECIMALS)
     );
 
     // set price
     await ctx.priceManager.setPrice(
-      ETH_USDC_MARKET_ID,
-      ethers.utils.parseUnits("1965", USDC_DECIMALS)
+      c.ETH_USDC_MARKET_ID,
+      ethers.utils.parseUnits("1965", c.USDC_DECIMALS)
     ); // 1950 USD per ETH
 
     // 1965 * (1 + 0.01) = 1986.65
 
-    const markPrice4 = await ctx.priceManager.getMarkPrice(ETH_USDC_MARKET_ID);
+    const markPrice4 = await ctx.priceManager.getMarkPrice(
+      c.ETH_USDC_MARKET_ID
+    );
 
     expect(markPrice4).to.equal(
-      ethers.utils.parseUnits("1984.65", USDC_DECIMALS)
+      ethers.utils.parseUnits("1984.65", c.USDC_DECIMALS)
     );
 
     const orderRequest2 = {
@@ -404,8 +380,8 @@ describe("Place and Execute Market Order", function () {
       isLong: true,
       isIncrease: false,
       orderType: 0,
-      marketId: ETH_USDC_MARKET_ID,
-      sizeAbs: ethers.utils.parseUnits("50", ETH_DECIMALS),
+      marketId: c.ETH_USDC_MARKET_ID,
+      sizeAbs: ethers.utils.parseUnits("50", c.ETH_DECIMALS),
       marginAbs: 0, // TODO:check:need to set marginAbs for decreasing position?
       limitPrice: 0,
     };
@@ -416,16 +392,16 @@ describe("Place and Execute Market Order", function () {
     // (Long OI - Short OI) = 50
     // price buffer = 0.005 (after the order)
     const priceBuffer3 = await ctx.priceManager.getPriceBuffer(
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
     expect(priceBuffer3).to.equal(
-      ethers.utils.parseUnits("0.005", PRICE_BUFFER_DECIMALS)
+      ethers.utils.parseUnits("0.005", c.PRICE_BUFFER_DECIMALS)
     );
 
     const key2 = await ctx.orderUtils._getPositionKey(
       ctx.trader.address,
       true, // isLong
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
 
     const position2 = await ctx.positionVault.getPosition(key2);
@@ -442,30 +418,30 @@ describe("Place and Execute Market Order", function () {
     // average price buffer = (0.01 - 0.005) / 2 = 0.0025
     // avgExecPrice = 1965 * (1 + 0.0025) = 1969.9125
     expect(orderRecord2.executionPrice).to.be.equal(
-      ethers.utils.parseUnits("1969.9125", USDC_DECIMALS)
+      ethers.utils.parseUnits("1969.9125", c.USDC_DECIMALS)
     );
 
     const globalPositionState2 =
-      await ctx.globalState.getGlobalLongPositionState(ETH_USDC_MARKET_ID);
+      await ctx.globalState.getGlobalLongPositionState(c.ETH_USDC_MARKET_ID);
     console.log(
       "\nglobalPositionState:",
       formatGlobalPositionState(globalPositionState2)
     );
 
     expect(globalPositionState2.totalSize).to.be.equal(
-      ethers.utils.parseUnits("50", ETH_DECIMALS)
+      ethers.utils.parseUnits("50", c.ETH_DECIMALS)
     );
     expect(globalPositionState2.totalMargin).to.be.equal(
-      ethers.utils.parseUnits("10000", USDC_DECIMALS)
+      ethers.utils.parseUnits("10000", c.USDC_DECIMALS)
     );
 
     // GlobalPositionState avgPrice doesn't change for decreasing positions
     expect(globalPositionState2.avgPrice).to.be.equal(
-      ethers.utils.parseUnits("1959.75", USDC_DECIMALS)
+      ethers.utils.parseUnits("1959.75", c.USDC_DECIMALS)
     );
 
     const tokenReserveAmount2 = await ctx.risePool.getLongReserveAmount(
-      ETH_USDC_MARKET_ID
+      c.ETH_USDC_MARKET_ID
     );
     console.log("\ntokenReserveAmount:", formatETH(tokenReserveAmount2), "ETH");
 
@@ -477,11 +453,11 @@ describe("Place and Execute Market Order", function () {
 
     // check avgOpenPrice
     expect(positionRecord2.avgOpenPrice).to.be.equal(
-      ethers.utils.parseUnits("1959.75", USDC_DECIMALS)
+      ethers.utils.parseUnits("1959.75", c.USDC_DECIMALS)
     );
     // check avgClose Price
     expect(positionRecord2.avgClosePrice).to.be.equal(
-      ethers.utils.parseUnits("1969.9125", USDC_DECIMALS)
+      ethers.utils.parseUnits("1969.9125", c.USDC_DECIMALS)
     );
 
     // check pnl
@@ -489,7 +465,7 @@ describe("Place and Execute Market Order", function () {
     // pnl = (Execution Price - Avg Open Price) * (Closed Size) for Long position
     // = (1969.9125 - 1959.75) * 50 = + 508.125 (USDC)
     expect(positionRecord2.cumulativeRealizedPnl).to.be.equal(
-      ethers.utils.parseUnits("508.125", USDC_DECIMALS)
+      ethers.utils.parseUnits("508.125", c.USDC_DECIMALS)
     );
 
     // position fee rate = 0.05%
@@ -498,7 +474,7 @@ describe("Place and Execute Market Order", function () {
     // cumulative position fee = 97.9875 + 49.2478125 = 147.2353125
     const traderBalance2 = await ctx.traderVault.getTraderBalance(
       ctx.trader.address,
-      USDC_ID
+      c.USDC_ID
     );
     console.log("traderBalance:", formatUSDC(traderBalance2), "USDC");
 
@@ -508,8 +484,8 @@ describe("Place and Execute Market Order", function () {
 
     expect(traderBalance2).to.be.equal(
       ethers.utils
-        .parseUnits("490508.125", USDC_DECIMALS)
-        .sub(ethers.utils.parseUnits("147.2353125", USDC_DECIMALS))
+        .parseUnits("490508.125", c.USDC_DECIMALS)
+        .sub(ethers.utils.parseUnits("147.2353125", c.USDC_DECIMALS))
     );
 
     // console.log(
@@ -518,8 +494,8 @@ describe("Place and Execute Market Order", function () {
 
     // // set price
     // await ctx.priceManager.setPrice(
-    //   ETH_USDC_MARKET_ID,
-    //   ethers.utils.parseUnits("1970", USDC_DECIMALS)
+    //   c.ETH_USDC_MARKET_ID,
+    //   ethers.utils.parseUnits("1970", c.USDC_DECIMALS)
     // ); // 1950 USD per ETH
 
     // // FIXME: TODO: `Close` order type ?
@@ -528,9 +504,9 @@ describe("Place and Execute Market Order", function () {
     //   isLong: true,
     //   isIncrease: false,
     //   orderType: 0,
-    //   marketId: ETH_USDC_MARKET_ID,
-    //   sizeAbs: ethers.utils.parseUnits("50", ETH_DECIMALS),
-    //   marginAbs: ethers.utils.parseUnits("10000", USDC_DECIMALS), // TODO:check:need to set marginAbs for decreasing position?
+    //   marketId: c.ETH_USDC_MARKET_ID,
+    //   sizeAbs: ethers.utils.parseUnits("50", c.ETH_DECIMALS),
+    //   marginAbs: ethers.utils.parseUnits("10000", c.USDC_DECIMALS), // TODO:check:need to set marginAbs for decreasing position?
     //   limitPrice: 0,
     // };
 
@@ -540,14 +516,14 @@ describe("Place and Execute Market Order", function () {
     // // (Long OI - Short OI) = 0
     // // price buffer = 0 (after the order)
     // const priceBuffer4 = await ctx.priceManager.getPriceBuffer(
-    //   ETH_USDC_MARKET_ID
+    //   c.ETH_USDC_MARKET_ID
     // );
     // expect(priceBuffer4).to.equal(0);
 
     // const key3 = await ctx.orderUtils._getPositionKey(
     //   ctx.trader.address,
     //   true, // isLong
-    //   ETH_USDC_MARKET_ID
+    //   c.ETH_USDC_MARKET_ID
     // );
 
     // const position3 = await ctx.positionVault.getPosition(key3);
@@ -564,7 +540,7 @@ describe("Place and Execute Market Order", function () {
     // // average price buffer = (0.005 - 0.005) / 2 = 0
     // // avgExecPrice = 1970 * (1 + 0) = 1970
     // expect(orderRecord3.executionPrice).to.be.equal(
-    //   ethers.utils.parseUnits("1970", USDC_DECIMALS)
+    //   ethers.utils.parseUnits("1970", c.USDC_DECIMALS)
     // );
     // const positionRecord3 = await ctx.positionHistory.positionRecords(
     //   ctx.trader.address,
@@ -574,13 +550,13 @@ describe("Place and Execute Market Order", function () {
 
     // // check avgOpenPrice
     // expect(positionRecord3.avgOpenPrice).to.be.equal(
-    //   ethers.utils.parseUnits("1959.75", USDC_DECIMALS)
+    //   ethers.utils.parseUnits("1959.75", c.USDC_DECIMALS)
     // );
     // // check avgClose Price
     // // 1. closed 50 ETH in price 1969.9125
     // // 2. closed 50 ETH in price 1970
     // expect(positionRecord3.avgClosePrice).to.be.equal(
-    //   ethers.utils.parseUnits("1969.95625", USDC_DECIMALS)
+    //   ethers.utils.parseUnits("1969.95625", c.USDC_DECIMALS)
     // );
 
     // // check pnl
@@ -588,7 +564,7 @@ describe("Place and Execute Market Order", function () {
     // // = (1970 - 1959.75) * 50 = + 512.5 (USDC)
     // // cumulativePnl = 508.125 + 512.5 = 1020.625
     // expect(positionRecord3.cumulativeRealizedPnl).to.be.equal(
-    //   ethers.utils.parseUnits("1020.625", USDC_DECIMALS)
+    //   ethers.utils.parseUnits("1020.625", c.USDC_DECIMALS)
     // );
 
     // // position fee rate = 0.05%
@@ -596,7 +572,7 @@ describe("Place and Execute Market Order", function () {
     // // position fee = 50 * 1970 * 0.0005 = 49.25
     // const traderBalance3 = await ctx.traderVault.getTraderBalance(
     //   ctx.trader.address,
-    //   USDC_ID
+    //   c.USDC_ID
     // );
     // console.log("traderBalance:", formatUSDC(traderBalance3), "USDC");
 
@@ -604,8 +580,8 @@ describe("Place and Execute Market Order", function () {
     // // cumulative position fee = 147.2353125 + 49.25 = 196.4853125
     // expect(traderBalance3).to.be.equal(
     //   ethers.utils
-    //     .parseUnits("501020.625", USDC_DECIMALS)
-    //     .sub(ethers.utils.parseUnits("196.4853125", USDC_DECIMALS))
+    //     .parseUnits("501020.625", c.USDC_DECIMALS)
+    //     .sub(ethers.utils.parseUnits("196.4853125", c.USDC_DECIMALS))
     // );
   });
 });

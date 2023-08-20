@@ -1,9 +1,9 @@
 import * as fs from "fs";
-import { Network } from "../utils/network";
-import { deployContract } from "../utils/deployer";
-import { getLibraryAddress } from "../utils/getLibraryAddress";
-import { getContractAddress } from "../utils/getContractAddress";
-import { getPresetAddress } from "../utils/getPresetAddress";
+import { Network } from "../../utils/network";
+import { deployContract } from "../../utils/deployer";
+import { getLibraryAddress } from "../../utils/getLibraryAddress";
+import { getContractAddress } from "../../utils/getContractAddress";
+import { getPresetAddress } from "../../utils/getPresetAddress";
 
 export type L3Addresses = {
   TraderVault: string;
@@ -264,7 +264,7 @@ async function deployL3Contracts(): Promise<L3Addresses> {
     PriceMaster: priceMaster.address,
   };
 
-  const _filePath = __dirname + "/output/contractAddresses.json";
+  const _filePath = __dirname + "/../output/contractAddresses.json";
 
   const l2Addresses = JSON.parse(fs.readFileSync(_filePath).toString())["L2"];
 

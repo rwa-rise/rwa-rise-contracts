@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { RpcUrl } from "../utils/network";
+import { RpcUrl } from "../../utils/network";
 
 export enum L3EventType {
   L2ToL1Tx = "L2ToL1Tx", // from function call `withdrawAssetToL2`

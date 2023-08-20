@@ -1,7 +1,7 @@
-import { Network } from "../utils/network";
-import { getContract } from "../utils/getContract";
-import { getContractAddress } from "../utils/getContractAddress";
-import { getPresetAddress } from "../utils/getPresetAddress";
+import { Network } from "../../utils/network";
+import { getContract } from "../../utils/getContract";
+import { getContractAddress } from "../../utils/getContractAddress";
+import { getPresetAddress } from "../../utils/getPresetAddress";
 
 export async function initialize() {
   const l2Vault = getContract("crosschain", "L2Vault", Network.L2);

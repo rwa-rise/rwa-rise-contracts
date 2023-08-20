@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
-import { Network } from "../utils/network";
-import { getContract } from "../utils/getContract";
-import { getPresetAddress } from "../utils/getPresetAddress";
-import { getContractAddress } from "../utils/getContractAddress";
+import { Network } from "../../utils/network";
+import { getContract } from "../../utils/getContract";
+import { getPresetAddress } from "../../utils/getPresetAddress";
+import { getContractAddress } from "../../utils/getContractAddress";
 
 async function main() {
   try {

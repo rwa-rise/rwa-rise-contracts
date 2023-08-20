@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { deployContract } from "../utils/deployer";
+import { deployContract } from "../../utils/deployer";
 
 export type libraryAddresses = {
   mathUtils: string;
@@ -27,7 +27,7 @@ async function deployLibraries() {
   };
 
   fs.writeFileSync(
-    __dirname + "/output/libraryAddresses.json",
+    __dirname + "/../output/libraryAddresses.json",
     JSON.stringify({ Library: libraryAddresses }, null, 2),
     { flag: "w" }
   );
