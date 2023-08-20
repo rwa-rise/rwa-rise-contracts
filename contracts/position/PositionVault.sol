@@ -64,9 +64,7 @@ contract PositionVault {
             _position.isLong = p._isLong;
             _position.currentPositionRecordId = p._currentPositionRecordId;
             _position.marketId = p._marketId;
-            _position.avgEntryFundingIndex = funding.getFundingIndex(
-                p._marketId
-            );
+            _position.avgEntryFundingIndex = 0; // initialize as zero
         }
 
         if (p._sizeDeltaAbs > 0 && p._isIncreaseInSize) {

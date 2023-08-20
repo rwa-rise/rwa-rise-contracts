@@ -53,7 +53,6 @@ contract MarketOrder is OrderExecutor {
     function executeMarketOrder(
         OrderRequest calldata req
     ) external returns (bytes32) {
-        // MarketOrderContext memory moc;
         ExecutionContext memory ec;
 
         ec.marketId = req.marketId;

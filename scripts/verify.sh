@@ -42,6 +42,7 @@ ListingManager=$(jq -r '.L3.ListingManager' $CONTRACT_PATH)
 GlobalState=$(jq -r '.L3.GlobalState' $CONTRACT_PATH)
 L3Gateway=$(jq -r '.L3.L3Gateway' $CONTRACT_PATH)
 PriceManager=$(jq -r '.L3.PriceManager' $CONTRACT_PATH)
+PriceFetcher=$(jq -r '.L3.PriceFetcher' $CONTRACT_PATH)
 Liquidation=$(jq -r '.L3.Liquidation' $CONTRACT_PATH)
 Funding=$(jq -r '.L3.Funding' $CONTRACT_PATH)
 PositionVault=$(jq -r '.L3.PositionVault' $CONTRACT_PATH)
@@ -62,8 +63,9 @@ npx hardhat verify --network $L3Network --contract contracts/market/ListingManag
 npx hardhat verify --network $L3Network --contract contracts/global/GlobalState.sol:GlobalState $GlobalState
 npx hardhat verify --network $L3Network --contract contracts/crosschain/L3Gateway.sol:L3Gateway $L3Gateway "$TraderVault" "$TokenInfo" "$RisePool" "$Market" "$L2MarginGateway" "$L2LiquidityGateway"
 npx hardhat verify --network $L3Network --contract contracts/price/PriceManager.sol:PriceManager $PriceManager "$GlobalState" "$TokenInfo"
+npx hardhat verify --network $L3Network --contract contracts/price/PriceFetcher.sol:PriceFetcher $PriceFetcher "$PriceManager"
 npx hardhat verify --network $L3Network --contract contracts/liquidation/Liquidation.sol:Liquidation $Liquidation "$PriceManager" "$TraderVault" "$TokenInfo" "$Market"
-npx hardhat verify --network $L3Network --contract contracts/fee/Funding.sol:Funding $Funding "$PriceManager" "$GlobalState" "$TokenInfo" "$Market"
+npx hardhat verify --network $L3Network --contract contracts/fee/Funding.sol:Funding $Funding "$PriceFetcher" "$GlobalState" "$TokenInfo" "$Market"
 npx hardhat verify --network $L3Network --contract contracts/position/PositionVault.sol:PositionVault $PositionVault "$Funding"
 npx hardhat verify --network $L3Network --contract contracts/order/OrderValidator.sol:OrderValidator $OrderValidator "$PositionVault" "$GlobalState" "$RisePool"
 npx hardhat verify --network $L3Network --contract contracts/order/OrderHistory.sol:OrderHistory $OrderHistory "$TraderVault"

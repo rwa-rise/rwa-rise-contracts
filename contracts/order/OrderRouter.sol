@@ -59,7 +59,6 @@ contract OrderRouter {
         OrderRequest calldata req
     ) external returns (bytes32) {
         _validateOrder(req);
-
         return marketOrder.executeMarketOrder(req);
     }
 }

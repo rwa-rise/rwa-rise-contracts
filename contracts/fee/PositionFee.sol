@@ -39,7 +39,6 @@ contract PositionFee {
         uint256 _feeAssetId,
         OrderType _orderType
     ) external {
-        // FIXME: 주석해제
         uint256 sizeAbsInUsd = (_sizeAbs * _avgExecPrice) /
             TOKEN_SIZE_PRECISION;
         uint256 fee = getPositionFee(sizeAbsInUsd, _orderType);

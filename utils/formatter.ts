@@ -21,6 +21,7 @@ const USD_DECIMAL = 20;
 const USDC_DECIMAL = 20; // FIXME:
 const PRICE_BUFFER_DECIMAL = 20;
 const FUNDING_RATE_DECIMAL = 26;
+const FUNDING_INDEX_DECIMAL = 12;
 
 enum OrderType {
   Market,
@@ -90,7 +91,7 @@ export function formatPosition(struct: any) {
   struct.lastUpdatedTime = struct.lastUpdatedTime.toNumber();
   struct.avgEntryFundingIndex = ethers.utils.formatUnits(
     struct.avgEntryFundingIndex,
-    PRICE_BUFFER_DECIMAL
+    FUNDING_INDEX_DECIMAL
   );
 
   return struct as OpenPosition;

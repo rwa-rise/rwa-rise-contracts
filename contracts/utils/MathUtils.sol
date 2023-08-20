@@ -13,15 +13,11 @@ library MathUtils {
     using SafeCast for int256;
     using SafeCast for uint256;
 
-    function _min(uint256 a, uint256 b) public pure returns (uint256) {
-        return a < b ? a : b;
-    }
-
-    function _abs(int256 x) public pure returns (uint256) {
+    function abs(int256 x) public pure returns (uint256) {
         return x >= 0 ? x.toUint256() : (-x).toUint256();
     }
 
-    function _weightedAverage(
+    function weightedAverage(
         uint256 w_a,
         uint256 w_b,
         uint256 a,
@@ -31,7 +27,7 @@ library MathUtils {
         return (w_a * a + w_b * b) / (a + b);
     }
 
-    function _weightedAverage(
+    function weightedAverage(
         int256 w_a,
         int256 w_b,
         uint256 a,
@@ -51,7 +47,7 @@ library MathUtils {
         return Math.mulDiv(x, y, denominator);
     }
 
-    function _clamp(
+    function clamp(
         int256 x,
         int256 min,
         int256 max

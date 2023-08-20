@@ -31,4 +31,8 @@ contract PriceFetcher {
     function _getIndexPrice(uint256 _marketId) external view returns (uint256) {
         return priceManager.getIndexPrice(_marketId);
     }
+
+    function _getPriceBuffer(uint256 _marketId) external view returns (int256) {
+        return priceManager.getPriceBuffer(_marketId);
+    }
 }

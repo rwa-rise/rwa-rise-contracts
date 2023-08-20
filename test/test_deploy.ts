@@ -115,7 +115,7 @@ export async function deployForTest() {
   const funding = await deployContract(
     "Funding",
     [
-      priceManager.address,
+      priceFetcher.address,
       globalState.address,
       tokenInfo.address,
       market.address,

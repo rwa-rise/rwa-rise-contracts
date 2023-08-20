@@ -76,7 +76,7 @@ struct MarketInfo {
 
 struct TokenData {
     uint256 decimals;
-    uint256 sizeToPriceBufferDeltaMultiplier;
+    uint256 sizeToPriceBufferDeltaMultiplier; // FIXME: move to MarkertInfo?
     address tokenAddress;
     // string symbol;
     // string name;

@@ -116,7 +116,7 @@ async function deployL3Contracts(): Promise<L3Addresses> {
   const funding = await deployContract(
     "Funding",
     [
-      priceManager.address,
+      priceFetcher.address,
       globalState.address,
       tokenInfo.address,
       market.address,

@@ -10,9 +10,7 @@ library OrderUtils {
         uint256 _tokenPrice,
         uint256 _tokenDecimals
     ) public pure returns (uint256) {
-        return
-            ((_usdAmount * 10 ** _tokenDecimals) / USDC_PRECISION) /
-            _tokenPrice;
+        return (_usdAmount * 10 ** _tokenDecimals) / _tokenPrice;
     }
 
     function _tokenToUsd(
@@ -20,9 +18,7 @@ library OrderUtils {
         uint256 _tokenPrice,
         uint256 _tokenDecimals
     ) public pure returns (uint256) {
-        return
-            ((_tokenAmount * _tokenPrice) * USDC_PRECISION) /
-            10 ** _tokenDecimals;
+        return ((_tokenAmount * _tokenPrice)) / 10 ** _tokenDecimals;
     }
 
     function _getPositionKey(

@@ -15,7 +15,7 @@ library PositionUtils {
         uint256 _markPrice
     ) public pure returns (uint256) {
         return
-            MathUtils._weightedAverage(
+            MathUtils.weightedAverage(
                 _prevAvgPrice,
                 _markPrice,
                 _prevSize,
@@ -30,7 +30,7 @@ library PositionUtils {
         int256 _currentFundingIndex
     ) public pure returns (int256) {
         return
-            MathUtils._weightedAverage(
+            MathUtils.weightedAverage(
                 _prevAvgEntryFundingIndex,
                 _currentFundingIndex,
                 _prevSize,

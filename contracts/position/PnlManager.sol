@@ -12,6 +12,8 @@ import "../risepool/RisePool.sol";
 import "../market/Market.sol";
 import "../fee/Funding.sol";
 
+import "hardhat/console.sol";
+
 contract PnlManager {
     using SafeCast for uint256;
     using SafeCast for int256;
@@ -42,13 +44,6 @@ contract PnlManager {
         uint256 _marginAbs
     ) public returns (int256) {
         MarketInfo memory marketInfo = market.getMarketInfo(_marketId);
-
-        // uint256 sizeInUsd = _tokenToUsd(
-        //     position.size,
-        //     _executionPrice,
-        //     tokenInfo.getTokenDecimals(market.getMarketInfo(_marketId).baseAssetId)
-        // );
-
         // int256 fundingFeeToPay = funding.getFundingFeeToPay(_position); // FIXME: 주석해제
         int256 fundingFeeToPay = 0;
 
@@ -72,6 +67,13 @@ contract PnlManager {
 
         // FIXME: TODO: funding fee 포함하여 Margin 잔고가 충분한지 검증하는 로직
         // FIXME: TODO: pnl을 token 수량으로 할지 USD로 할지 결정 (코드 미반영)
+
+        // console.log("^^^^^ pnl:", pnl.toUint256());
+        // console.log("^^^^^ fundingFeeToPay:", fundingFeeToPay.toUint256());
+        // console.log(
+        //     "^^^^^ pnl - fundingFeeToPay:",
+        //     (pnl - fundingFeeToPay).toUint256()
+        // );
 
         int256 pnlAfterFundingFee = pnl - fundingFeeToPay;
 

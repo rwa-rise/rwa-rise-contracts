@@ -197,7 +197,7 @@ contract OrderBook is OrderBookBase, OrderExecutor, Modifiers {
             // `sizeCap` maintains its context within the while loop
 
             // ptc.sizeCapInUsd =
-            //     (_abs(
+            //     (abs(
             //         (ic.limitPriceIterator).toInt256() -
             //             (ic.interimMarkPrice).toInt256()
             //     ) *
@@ -216,7 +216,7 @@ contract OrderBook is OrderBookBase, OrderExecutor, Modifiers {
 
             ptc.sizeCap = ((SIZE_TO_PRICE_BUFFER_PRECISION *
                 ((ic.limitPriceIterator).toInt256() -
-                    (ic.interimMarkPrice).toInt256())._abs()) /
+                    (ic.interimMarkPrice).toInt256()).abs()) /
                 tokenInfo.getBaseTokenSizeToPriceBufferDeltaMultiplier(
                     _marketId
                 ) /
