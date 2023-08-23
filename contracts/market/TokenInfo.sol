@@ -62,6 +62,7 @@ contract TokenInfo {
     // TODO: onlyAdmin
     // TODO: check- to store token ticker and name in the contract storage?
     function registerToken(
+        // FIXME: make it possible to set assetId manually with a parameter (not using global counter)
         address _tokenAddress,
         uint256 _tokenDecimals
     ) external {

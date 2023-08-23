@@ -33,9 +33,9 @@ describe("Place and Execute Market Order", function () {
 
   async function _registerTokens(ctx: any) {
     // register & set token data (USDC)
-    await ctx.tokenInfo.registerToken(ctx.testUSDC, c.USDC_DECIMALS);
+    await ctx.tokenInfo.registerToken(ctx.testUSDCAddress, c.USDC_DECIMALS);
     const testUSDCAssetId = await ctx.tokenInfo.getAssetIdFromTokenAddress(
-      ctx.testUSDC
+      ctx.testUSDCAddress
     );
     await ctx.tokenInfo.setSizeToPriceBufferDeltaMultiplier(
       testUSDCAssetId,
@@ -43,9 +43,9 @@ describe("Place and Execute Market Order", function () {
     );
 
     // register & set token data (ETH)
-    await ctx.tokenInfo.registerToken(ctx.weth, c.ETH_DECIMALS);
+    await ctx.tokenInfo.registerToken(ctx.wethAddress, c.ETH_DECIMALS);
     const wethAssetId = await ctx.tokenInfo.getAssetIdFromTokenAddress(
-      ctx.weth
+      ctx.wethAddress
     );
     await ctx.tokenInfo.setSizeToPriceBufferDeltaMultiplier(
       wethAssetId,
@@ -112,10 +112,15 @@ describe("Place and Execute Market Order", function () {
 
   async function initialize(ctx: any) {
     await _registerTokens(ctx);
+
     await _listPerpMarket(ctx);
+
     await _addLiquidities(ctx);
+
     await _depositMargin(ctx, p.DEPOSIT_AMOUNT);
+
     await _setMarketMaxCapacities(ctx);
+
     await _initializeFunding(ctx);
   }
 
@@ -138,6 +143,7 @@ describe("Place and Execute Market Order", function () {
     const testUSDCDecimal = await ctx.tokenInfo.getTokenDecimals(
       testUSDCAssetId
     );
+
     const testUSDCPriceBufferDeltaMultiplier =
       await ctx.tokenInfo.getSizeToPriceBufferDeltaMultiplier(testUSDCAssetId);
     const wethAssetId = await ctx.tokenInfo.getAssetIdFromTokenAddress(

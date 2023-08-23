@@ -161,3 +161,7 @@ export function formatUSDC(value: any) {
 export function formatETH(value: any) {
   return ethers.utils.formatUnits(value, ETH_DECIMAL);
 }
+
+export function formatPriceBuffer(value: any) {
+  return ethers.utils.formatUnits(value, PRICE_BUFFER_DECIMAL);
+}

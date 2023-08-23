@@ -33,7 +33,7 @@ export async function getPositionRecords(trader: string) {
 
 async function main() {
   const deployer = getPresetAddress("deployer");
-  await getPositionRecord(deployer, 0);
+  await getPositionRecord(deployer, 1);
 }
 
 main().catch((error) => {

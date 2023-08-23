@@ -9,7 +9,7 @@ export class Params {
     this.c.PRICE_BUFFER_DELTA_MULTIPLIER_DECIMALS
   );
   ETH_MULTIPLIER = ethers.utils.parseUnits(
-    "0.0001",
+    "0.000001",
     this.c.PRICE_BUFFER_DELTA_MULTIPLIER_DECIMALS
   );
 
