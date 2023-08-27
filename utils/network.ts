@@ -5,5 +5,6 @@ export enum Network {
 
 export enum RpcUrl {
   L2 = "https://goerli-rollup.arbitrum.io/rpc",
-  L3 = "http://localhost:8449",
+  // L3 = "http://localhost:8449",
+  L3 = "https://rpc.risefinance.io/",
 }

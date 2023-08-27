@@ -15,7 +15,7 @@ export async function _setPrice(price: string) {
   );
 }
 async function main() {
-  await _setPrice("1889");
+  await _setPrice("1760");
 }
 
 main().catch((error) => {

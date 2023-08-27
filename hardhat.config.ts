@@ -17,6 +17,10 @@ const config: HardhatUserConfig = {
       url: "http://localhost:8449",
       accounts: [process.env.DEPLOY_PRIVATE_KEY as string],
     },
+    l3testnet: {
+      url: "https://rpc.risefinance.io/",
+      accounts: [process.env.DEPLOY_PRIVATE_KEY as string],
+    },
     l2local: {
       url: "http://127.0.0.1:7545",
       accounts: [process.env.DEPLOY_PRIVATE_KEY as string],
@@ -30,11 +34,11 @@ const config: HardhatUserConfig = {
     apiKey: process.env.ARBISCAN_API_KEY as string,
     customChains: [
       {
-        network: "l3local",
-        chainId: 71349615649,
+        network: "l3testnet",
+        chainId: 13842181671,
         urls: {
-          apiURL: "http://localhost:4000/api",
-          browserURL: "http://localhost:4000",
+          apiURL: "https://explorer.risefinance.io/api",
+          browserURL: "https://explorer.risefinance.io",
         },
       },
     ],

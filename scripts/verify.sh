@@ -6,7 +6,7 @@ PRESET_PATH=$HERE/input/presetAddresses.json
 CONTRACT_PATH=$HERE/output/contractAddresses.json
 
 L2Network='l2testnet'
-L3Network='l3local'
+L3Network='l3testnet'
 
 ##### Preset #####
 
