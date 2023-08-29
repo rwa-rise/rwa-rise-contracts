@@ -20,9 +20,12 @@ export class Params {
 
   DEPOSIT_AMOUNT = ethers.utils.parseUnits("500000", this.c.USDC_DECIMALS);
 
-  LONG_LIQUIDITY_AMOUNT = ethers.utils.parseUnits("20000", this.c.ETH_DECIMALS);
+  LONG_LIQUIDITY_AMOUNT = ethers.utils.parseUnits(
+    "200000",
+    this.c.ETH_DECIMALS
+  );
   SHORT_LIQUIDITY_AMOUNT = ethers.utils.parseUnits(
-    "40000000",
+    "400000000",
     this.c.USDC_DECIMALS
   );
 

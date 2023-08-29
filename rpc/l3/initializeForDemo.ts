@@ -8,7 +8,7 @@ import { _setPrice } from "./_setPrice";
 async function main() {
   await registerTokens();
   await listPerpMarket();
-  await _addLiquidities();
+  // await _addLiquidities();
   await _depositMargin("0xDe264e2133963c9f40e07f290E1D852f7e4e4c7c", "500000");
   await setMarketMaxCapacities();
   // 마지막으로 set price 필요
