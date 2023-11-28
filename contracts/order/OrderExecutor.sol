@@ -50,13 +50,13 @@ contract OrderExecutor is PnlManager {
         OrderRequest memory req,
         ExecutionContext memory ec
     ) internal {
-        positionFee.payPositionFee(
-            tx.origin,
-            ec.sizeAbs,
-            ec.avgExecPrice,
-            ec.marginAssetId,
-            req.orderType
-        );
+        // positionFee.payPositionFee(
+        //     tx.origin,
+        //     ec.sizeAbs,
+        //     ec.avgExecPrice,
+        //     ec.marginAssetId,
+        //     req.orderType
+        // );
         traderVault.decreaseTraderBalance(
             tx.origin,
             ec.marginAssetId,
@@ -137,13 +137,13 @@ contract OrderExecutor is PnlManager {
         OrderRequest memory req,
         ExecutionContext memory ec
     ) internal {
-        positionFee.payPositionFee(
-            tx.origin,
-            ec.sizeAbs,
-            ec.avgExecPrice,
-            ec.marginAssetId,
-            req.orderType
-        );
+        // positionFee.payPositionFee(
+        //     tx.origin,
+        //     ec.sizeAbs,
+        //     ec.avgExecPrice,
+        //     ec.marginAssetId,
+        //     req.orderType
+        // );
         // PnL settlement
         ec.pnl = settlePnL(
             ec.openPosition,
