@@ -20,13 +20,6 @@ struct UpdatePositionParams {
     bool _isIncreaseInMargin;
 }
 
-/// L2LiquidityGateway.sol & L2MarginGateway.sol
-struct L2ToL3FeeParams {
-    uint256 _maxSubmissionCost;
-    uint256 _gasLimit;
-    uint256 _gasPriceBid;
-}
-
 /// PositionHistory.sol
 struct OpenPositionRecordParams {
     address _trader;

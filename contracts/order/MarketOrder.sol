@@ -13,7 +13,7 @@ import "../global/GlobalState.sol";
 import "./OrderValidator.sol";
 import "./OrderHistory.sol";
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract MarketOrder is OrderExecutor {
     OrderValidator public orderValidator;

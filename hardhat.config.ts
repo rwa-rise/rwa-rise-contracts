@@ -13,35 +13,11 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
-    l3local: {
-      url: "http://localhost:8449",
-      accounts: [process.env.DEPLOY_PRIVATE_KEY as string],
+    klaytn_baobab: {
+      url: "https://public-en-baobab.klaytn.net/",
+      gasPrice: 250000000000,
+      accounts: [process.env.KLAYTN_DEPLOY_PRIVATE_KEY as string],
     },
-    l3testnet: {
-      url: "https://rpc.risefinance.io/",
-      accounts: [process.env.DEPLOY_PRIVATE_KEY as string],
-    },
-    l2local: {
-      url: "http://127.0.0.1:7545",
-      accounts: [process.env.DEPLOY_PRIVATE_KEY as string],
-    },
-    l2testnet: {
-      url: "https://goerli-rollup.arbitrum.io/rpc", // Arbitrum Testnet
-      accounts: [process.env.DEPLOY_PRIVATE_KEY as string],
-    },
-  },
-  etherscan: {
-    apiKey: process.env.ARBISCAN_API_KEY as string,
-    customChains: [
-      {
-        network: "l3testnet",
-        chainId: 13842181671,
-        urls: {
-          apiURL: "https://explorer.risefinance.io/api",
-          browserURL: "https://explorer.risefinance.io",
-        },
-      },
-    ],
   },
 };
 

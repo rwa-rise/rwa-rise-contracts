@@ -5,14 +5,14 @@ import { getLibraryAddress } from "../../utils/getLibraryAddress";
 import { getContractAddress } from "../../utils/getContractAddress";
 import { getPresetAddress } from "../../utils/getPresetAddress";
 
-export type L3Addresses = {
+export type Addresses = {
+  TestUSDC: string;
   TraderVault: string;
   Market: string;
   TokenInfo: string;
   ListingManager: string;
   RisePool: string;
   GlobalState: string;
-  L3Gateway: string;
   PriceManager: string;
   PriceFetcher: string;
   Liquidation: string;
@@ -26,14 +26,13 @@ export type L3Addresses = {
   MarketOrder: string;
   OrderBook: string;
   OrderRouter: string;
-  PriceMaster: string;
 };
 
 async function main() {
-  await deployL3Contracts();
+  await deployContracts();
 }
 
-async function deployL3Contracts(): Promise<L3Addresses> {
+async function deployContracts(): Promise<Addresses> {
   /// Libraries
 
   // MathUtils
@@ -48,12 +47,8 @@ async function deployL3Contracts(): Promise<L3Addresses> {
   // PnlUtils
   const pnlUtils = getLibraryAddress("PnlUtils");
 
-  const l2MarginGateway = getContractAddress("L2MarginGateway", Network.L2);
-  const l2LiquidityGateway = getContractAddress(
-    "L2LiquidityGateway",
-    Network.L2
-  );
-  const keeper = getPresetAddress("keeper");
+  // Test USDC
+  const usdc = await deployContract("TestUSDC");
 
   // TraderVault
   const traderVault = await deployContract("TraderVault");
@@ -77,15 +72,6 @@ async function deployL3Contracts(): Promise<L3Addresses> {
     PositionUtils: positionUtils,
   });
 
-  // L3Gateway
-  const l3Gateway = await deployContract("L3Gateway", [
-    traderVault.address,
-    tokenInfo.address,
-    risePool.address,
-    market.address,
-    l2MarginGateway,
-    l2LiquidityGateway,
-  ]);
 
   // PriceManager
   const priceManager = await deployContract("PriceManager", [
@@ -209,22 +195,15 @@ async function deployL3Contracts(): Promise<L3Addresses> {
     orderBook.address,
   ]);
 
-  // PriceMaster
-  const priceMaster = await deployContract("PriceMaster", [
-    priceManager.address,
-    orderBook.address,
-    keeper, // price keeper
-  ]);
-
   console.log("---------------------------------------------");
-  console.log(">>> L3 Contracts Deployed:");
+  console.log(">>> Contracts Deployed:");
+  console.log("Test USDC:", usdc.address);
   console.log("TraderVault:", traderVault.address);
   console.log("Market:", market.address);
   console.log("TokenInfo:", tokenInfo.address);
   console.log("ListingManager:", listingManager.address);
   console.log("RisePool:", risePool.address);
   console.log("GlobalState:", globalState.address);
-  console.log("L3Gateway:", l3Gateway.address);
   console.log("PriceManager:", priceManager.address);
   console.log("PriceFetcher:", priceFetcher.address);
   console.log("Liquidation:", liquidation.address);
@@ -237,17 +216,16 @@ async function deployL3Contracts(): Promise<L3Addresses> {
   console.log("MarketOrder:", marketOrder.address);
   console.log("OrderBook:", orderBook.address);
   console.log("OrderRouter:", orderRouter.address);
-  console.log("PriceMaster:", priceMaster.address);
   console.log("---------------------------------------------");
 
-  const l3Addresses = {
+  const addresses = {
+    TestUSDC: usdc.address,
     TraderVault: traderVault.address,
     Market: market.address,
     TokenInfo: tokenInfo.address,
     RisePool: risePool.address,
     ListingManager: listingManager.address,
     GlobalState: globalState.address,
-    L3Gateway: l3Gateway.address,
     PriceManager: priceManager.address,
     PriceFetcher: priceFetcher.address,
     Liquidation: liquidation.address,
@@ -261,16 +239,14 @@ async function deployL3Contracts(): Promise<L3Addresses> {
     MarketOrder: marketOrder.address,
     OrderBook: orderBook.address,
     OrderRouter: orderRouter.address,
-    PriceMaster: priceMaster.address,
   };
 
   const _filePath = __dirname + "/../output/contractAddresses.json";
 
-  const l2Addresses = JSON.parse(fs.readFileSync(_filePath).toString())["L2"];
 
   fs.writeFileSync(
     _filePath,
-    JSON.stringify({ L2: l2Addresses, L3: l3Addresses }, null, 2),
+    JSON.stringify({ Baobab: addresses }, null, 2),
     { flag: "w" }
   );
 
@@ -278,7 +254,7 @@ async function deployL3Contracts(): Promise<L3Addresses> {
     console.log(err);
   });
 
-  return l3Addresses;
+  return addresses;
 }
 
 main().catch((error) => {

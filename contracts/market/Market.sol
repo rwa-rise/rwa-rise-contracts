@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "../common/structs.sol";
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract Market {
     mapping(uint256 => MarketInfo) public markets; // marketId => MarketInfo

@@ -19,7 +19,7 @@ export function getContract(
     isPresetAddress
   );
 
-  const privateKey = process.env.DEPLOY_PRIVATE_KEY as string;
+  const privateKey = process.env.KLAYTN_DEPLOY_PRIVATE_KEY as string;
   const wallet = new ethers.Wallet(privateKey, provider);
 
   const contract = new ethers.Contract(contractAddress, contractAbi, wallet);
@@ -56,7 +56,7 @@ export function getLibrary(
     network
   );
 
-  const privateKey = process.env.DEPLOY_PRIVATE_KEY as string;
+  const privateKey = process.env.KLAYTN_DEPLOY_PRIVATE_KEY as string;
   const wallet = new ethers.Wallet(privateKey, provider);
 
   const contract = new ethers.Contract(libraryAddress, contractAbi, wallet);
@@ -72,13 +72,13 @@ function getContractBase(
 ) {
   let provider;
 
-  if (network === Network.L2) {
-    provider = new ethers.providers.JsonRpcProvider(RpcUrl.L2);
-  } else if (network === Network.L3) {
-    provider = new ethers.providers.JsonRpcProvider(RpcUrl.L3);
+  if (network === Network.BAOBAB) {
+    provider = new ethers.providers.JsonRpcProvider(RpcUrl.BAOBAB);
   } else {
     throw new Error("Invalid network");
   }
+
+  // console.log(">>> contractName: ", contractName)
 
   const contractAbiPath = path.join(
     `artifacts/contracts/${domainPath}/${contractName}.sol/${contractName}.json`
@@ -110,10 +110,8 @@ function getLibraryBase(
 ) {
   let provider;
 
-  if (network === Network.L2) {
-    provider = new ethers.providers.JsonRpcProvider(RpcUrl.L2);
-  } else if (network === Network.L3) {
-    provider = new ethers.providers.JsonRpcProvider(RpcUrl.L3);
+  if (network === Network.BAOBAB) {
+    provider = new ethers.providers.JsonRpcProvider(RpcUrl.BAOBAB);
   } else {
     throw new Error("Invalid network");
   }

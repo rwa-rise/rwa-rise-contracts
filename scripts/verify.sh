@@ -5,73 +5,48 @@ HERE=$(dirname $(realpath $0))
 PRESET_PATH=$HERE/input/presetAddresses.json
 CONTRACT_PATH=$HERE/output/contractAddresses.json
 
-L2Network='l2testnet'
-L3Network='l3testnet'
+BaobabNetwork='klaytn_baobab'
 
 ##### Preset #####
 
-inbox=$(jq -r '.Inbox' $PRESET_PATH)
 keeper=$(jq -r '.keeper' $PRESET_PATH)
 
-##### L2 #####
+##### Klaytn Baobab #####
 
-# TestUSDC=$(jq -r '.L2.TestUSDC' $CONTRACT_PATH)
-# Market=$(jq -r '.L2.Market' $CONTRACT_PATH)
-# TokenInfo=$(jq -r '.L2.TokenInfo' $CONTRACT_PATH)
-# L2Vault=$(jq -r '.L2.L2Vault' $CONTRACT_PATH)
-# L2MarginGateway=$(jq -r '.L2.L2MarginGateway' $CONTRACT_PATH)
-# RisePoolUtils=$(jq -r '.L2.RisePoolUtils' $CONTRACT_PATH)
-# L2LiquidityGateway=$(jq -r '.L2.L2LiquidityGateway' $CONTRACT_PATH)
+TraderVault=$(jq -r '.Baobab.TraderVault' $CONTRACT_PATH)
+Market=$(jq -r '.Baobab.Market' $CONTRACT_PATH)
+TokenInfo=$(jq -r '.Baobab.TokenInfo' $CONTRACT_PATH)
+RisePool=$(jq -r '.Baobab.RisePool' $CONTRACT_PATH)
+ListingManager=$(jq -r '.Baobab.ListingManager' $CONTRACT_PATH)
+GlobalState=$(jq -r '.Baobab.GlobalState' $CONTRACT_PATH)
+PriceManager=$(jq -r '.Baobab.PriceManager' $CONTRACT_PATH)
+PriceFetcher=$(jq -r '.Baobab.PriceFetcher' $CONTRACT_PATH)
+Liquidation=$(jq -r '.Baobab.Liquidation' $CONTRACT_PATH)
+Funding=$(jq -r '.Baobab.Funding' $CONTRACT_PATH)
+PositionVault=$(jq -r '.Baobab.PositionVault' $CONTRACT_PATH)
+OrderValidator=$(jq -r '.Baobab.OrderValidator' $CONTRACT_PATH)
+OrderHistory=$(jq -r '.Baobab.OrderHistory' $CONTRACT_PATH)
+PositionHistory=$(jq -r '.Baobab.PositionHistory' $CONTRACT_PATH)
+PositionManager=$(jq -r '.Baobab.PositionManager' $CONTRACT_PATH)
+MarketOrder=$(jq -r '.Baobab.MarketOrder' $CONTRACT_PATH)
+OrderBook=$(jq -r '.Baobab.OrderBook' $CONTRACT_PATH)
+OrderRouter=$(jq -r '.Baobab.OrderRouter' $CONTRACT_PATH)
 
-# npx hardhat verify --network $L2Network --contract contracts/token/TestUSDC.sol:TestUSDC $TestUSDC
-# npx hardhat verify --network $L2Network --contract contracts/market/Market.sol:Market $Market
-# npx hardhat verify --network $L2Network --contract contracts/market/TokenInfo.sol:TokenInfo $TokenInfo "$Market"
-# npx hardhat verify --network $L2Network --contract contracts/crosschain/L2Vault.sol:L2Vault $L2Vault
-# npx hardhat verify --network $L2Network --contract contracts/crosschain/L2MarginGateway.sol:L2MarginGateway $L2MarginGateway "$inbox" "$L2Vault" "$TokenInfo"
-# npx hardhat verify --network $L2Network --contract contracts/risepool/RisePoolUtils.sol:RisePoolUtils $RisePoolUtils
-# npx hardhat verify --network $L2Network --contract contracts/crosschain/L2LiquidityGateway.sol:L2LiquidityGateway $L2LiquidityGateway "$inbox" "$L2Vault" "$Market" "$RisePoolUtils"
-
-
-##### L3 #####
-
-TraderVault=$(jq -r '.L3.TraderVault' $CONTRACT_PATH)
-Market=$(jq -r '.L3.Market' $CONTRACT_PATH)
-TokenInfo=$(jq -r '.L3.TokenInfo' $CONTRACT_PATH)
-RisePool=$(jq -r '.L3.RisePool' $CONTRACT_PATH)
-ListingManager=$(jq -r '.L3.ListingManager' $CONTRACT_PATH)
-GlobalState=$(jq -r '.L3.GlobalState' $CONTRACT_PATH)
-L3Gateway=$(jq -r '.L3.L3Gateway' $CONTRACT_PATH)
-PriceManager=$(jq -r '.L3.PriceManager' $CONTRACT_PATH)
-PriceFetcher=$(jq -r '.L3.PriceFetcher' $CONTRACT_PATH)
-Liquidation=$(jq -r '.L3.Liquidation' $CONTRACT_PATH)
-Funding=$(jq -r '.L3.Funding' $CONTRACT_PATH)
-PositionVault=$(jq -r '.L3.PositionVault' $CONTRACT_PATH)
-OrderValidator=$(jq -r '.L3.OrderValidator' $CONTRACT_PATH)
-OrderHistory=$(jq -r '.L3.OrderHistory' $CONTRACT_PATH)
-PositionHistory=$(jq -r '.L3.PositionHistory' $CONTRACT_PATH)
-PositionManager=$(jq -r '.L3.PositionManager' $CONTRACT_PATH)
-MarketOrder=$(jq -r '.L3.MarketOrder' $CONTRACT_PATH)
-OrderBook=$(jq -r '.L3.OrderBook' $CONTRACT_PATH)
-OrderRouter=$(jq -r '.L3.OrderRouter' $CONTRACT_PATH)
-PriceMaster=$(jq -r '.L3.PriceMaster' $CONTRACT_PATH)
-
-npx hardhat verify --network $L3Network --contract contracts/account/TraderVault.sol:TraderVault $TraderVault
-npx hardhat verify --network $L3Network --contract contracts/market/Market.sol:Market $Market
-npx hardhat verify --network $L3Network --contract contracts/market/TokenInfo.sol:TokenInfo $TokenInfo "$Market"
-npx hardhat verify --network $L3Network --contract contracts/risepool/RisePool.sol:RisePool $RisePool
-npx hardhat verify --network $L3Network --contract contracts/market/ListingManager.sol:ListingManager $ListingManager
-npx hardhat verify --network $L3Network --contract contracts/global/GlobalState.sol:GlobalState $GlobalState
-npx hardhat verify --network $L3Network --contract contracts/crosschain/L3Gateway.sol:L3Gateway $L3Gateway "$TraderVault" "$TokenInfo" "$RisePool" "$Market" "$L2MarginGateway" "$L2LiquidityGateway"
-npx hardhat verify --network $L3Network --contract contracts/price/PriceManager.sol:PriceManager $PriceManager "$GlobalState" "$TokenInfo"
-npx hardhat verify --network $L3Network --contract contracts/price/PriceFetcher.sol:PriceFetcher $PriceFetcher "$PriceManager"
-npx hardhat verify --network $L3Network --contract contracts/liquidation/Liquidation.sol:Liquidation $Liquidation "$PriceManager" "$TraderVault" "$TokenInfo" "$Market"
-npx hardhat verify --network $L3Network --contract contracts/fee/Funding.sol:Funding $Funding "$PriceFetcher" "$GlobalState" "$TokenInfo" "$Market"
-npx hardhat verify --network $L3Network --contract contracts/position/PositionVault.sol:PositionVault $PositionVault "$Funding"
-npx hardhat verify --network $L3Network --contract contracts/order/OrderValidator.sol:OrderValidator $OrderValidator "$PositionVault" "$GlobalState" "$RisePool"
-npx hardhat verify --network $L3Network --contract contracts/order/OrderHistory.sol:OrderHistory $OrderHistory "$TraderVault"
-npx hardhat verify --network $L3Network --contract contracts/position/PositionHistory.sol:PositionHistory $PositionHistory "$PositionVault" "$TraderVault"
-npx hardhat verify --network $L3Network --contract contracts/position/PositionManager.sol:PositionManager $PositionManager "$PositionVault" "$Market"
-npx hardhat verify --network $L3Network --contract contracts/order/MarketOrder.sol:MarketOrder $MarketOrder "$TraderVault" "$RisePool" "$Market" "$PositionHistory" "$PositionVault" "$OrderValidator" "$OrderHistory" "$GlobalState"
-npx hardhat verify --network $L3Network --contract contracts/orderbook/OrderBook.sol:OrderBook $OrderBook "$TraderVault" "$RisePool" "$Market" "$PositionHistory" "$PositionVault"
-npx hardhat verify --network $L3Network --contract contracts/order/OrderRouter.sol:OrderRouter $OrderRouter "$MarketOrder" "$OrderBook"
-npx hardhat verify --network $L3Network --contract contracts/price/PriceMaster.sol:PriceMaster $PriceMaster "$PriceManager" "$OrderBook" "$keeper"
+npx hardhat verify --network $BaobabNetwork --contract contracts/account/TraderVault.sol:TraderVault $TraderVault
+npx hardhat verify --network $BaobabNetwork --contract contracts/market/Market.sol:Market $Market
+npx hardhat verify --network $BaobabNetwork --contract contracts/market/TokenInfo.sol:TokenInfo $TokenInfo "$Market"
+npx hardhat verify --network $BaobabNetwork --contract contracts/risepool/RisePool.sol:RisePool $RisePool
+npx hardhat verify --network $BaobabNetwork --contract contracts/market/ListingManager.sol:ListingManager $ListingManager
+npx hardhat verify --network $BaobabNetwork --contract contracts/global/GlobalState.sol:GlobalState $GlobalState
+npx hardhat verify --network $BaobabNetwork --contract contracts/price/PriceManager.sol:PriceManager $PriceManager "$GlobalState" "$TokenInfo"
+npx hardhat verify --network $BaobabNetwork --contract contracts/price/PriceFetcher.sol:PriceFetcher $PriceFetcher "$PriceManager"
+npx hardhat verify --network $BaobabNetwork --contract contracts/liquidation/Liquidation.sol:Liquidation $Liquidation "$PriceManager" "$TraderVault" "$TokenInfo" "$Market"
+npx hardhat verify --network $BaobabNetwork --contract contracts/fee/Funding.sol:Funding $Funding "$PriceFetcher" "$GlobalState" "$TokenInfo" "$Market"
+npx hardhat verify --network $BaobabNetwork --contract contracts/position/PositionVault.sol:PositionVault $PositionVault "$Funding"
+npx hardhat verify --network $BaobabNetwork --contract contracts/order/OrderValidator.sol:OrderValidator $OrderValidator "$PositionVault" "$GlobalState" "$RisePool"
+npx hardhat verify --network $BaobabNetwork --contract contracts/order/OrderHistory.sol:OrderHistory $OrderHistory "$TraderVault"
+npx hardhat verify --network $BaobabNetwork --contract contracts/position/PositionHistory.sol:PositionHistory $PositionHistory "$PositionVault" "$TraderVault"
+npx hardhat verify --network $BaobabNetwork --contract contracts/position/PositionManager.sol:PositionManager $PositionManager "$PositionVault" "$Market"
+npx hardhat verify --network $BaobabNetwork --contract contracts/order/MarketOrder.sol:MarketOrder $MarketOrder "$TraderVault" "$RisePool" "$Market" "$PositionHistory" "$PositionVault" "$OrderValidator" "$OrderHistory" "$GlobalState"
+npx hardhat verify --network $BaobabNetwork --contract contracts/orderbook/OrderBook.sol:OrderBook $OrderBook "$TraderVault" "$RisePool" "$Market" "$PositionHistory" "$PositionVault"
+npx hardhat verify --network $BaobabNetwork --contract contracts/order/OrderRouter.sol:OrderRouter $OrderRouter "$MarketOrder" "$OrderBook"

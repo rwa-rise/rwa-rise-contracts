@@ -2,9 +2,6 @@
 
 pragma solidity ^0.8.0;
 
-import "../crosschain/interfaces/l3/ArbSys.sol";
-
-// TODO: check - `override` needed for function declared in the interface `IL3Vault`?
 contract TraderVault {
     // TODO: change to traderMarginBalances?
     mapping(address => mapping(uint256 => uint256)) public traderBalances; // userAddress => assetId => Balance

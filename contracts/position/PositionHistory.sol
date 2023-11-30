@@ -9,7 +9,7 @@ import "../position/PositionVault.sol";
 import "../position/PositionUtils.sol";
 import "../account/TraderVault.sol";
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract PositionHistory {
     PositionVault public positionVault;

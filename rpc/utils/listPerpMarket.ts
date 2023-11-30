@@ -18,5 +18,8 @@ export async function listPerpMarket() {
     fundingRateMultiplier: p.ETH_USDC_MARKET_FUNDING_RATE_MULTIPLIER,
   };
 
-  await ctx.listingManager.createRisePerpsMarket(m);
+  const tx1 = await ctx.listingManager.createRisePerpsMarket(m);
+  // const tx1 = await ctx.listingManager.createRisePerpsMarket(m, {gasLimit: 10000000});
+
+  await tx1.wait();
 }

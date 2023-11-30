@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 
 import "../common/structs.sol";
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract OrderBookBase {
     mapping(address => uint256) public traderOrderRequestCounts; // userAddress => orderRequestCount (limit order)

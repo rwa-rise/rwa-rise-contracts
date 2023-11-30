@@ -4,43 +4,41 @@ import { getPresetAddress } from "../utils/getPresetAddress";
 import { Network } from "../utils/network";
 
 export function getContractsContext() {
-  const mathUtils = getLibrary("utils", "MathUtils", Network.L3);
-  const orderUtils = getLibrary("order", "OrderUtils", Network.L3);
-  const positionUtils = getLibrary("position", "PositionUtils", Network.L3);
-  const pnlUtils = getLibrary("position", "PnlUtils", Network.L3);
+  const mathUtils = getLibrary("utils", "MathUtils", Network.BAOBAB);
+  const orderUtils = getLibrary("order", "OrderUtils", Network.BAOBAB);
+  const positionUtils = getLibrary("position", "PositionUtils", Network.BAOBAB);
+  const pnlUtils = getLibrary("position", "PnlUtils", Network.BAOBAB);
 
   const wethAddress = getPresetAddress("WETH");
-  const testUSDCAddress = getContractAddress("TestUSDC", Network.L2);
+  const testUSDCAddress = getContractAddress("TestUSDC", Network.BAOBAB);
 
-  const traderVault = getContract("account", "TraderVault", Network.L3);
-  const market = getContract("market", "Market", Network.L3);
-  const tokenInfo = getContract("market", "TokenInfo", Network.L3);
-  const listingManager = getContract("market", "ListingManager", Network.L3);
-  const risePool = getContract("risepool", "RisePool", Network.L3);
-  const globalState = getContract("global", "GlobalState", Network.L3);
-  const l3Gateway = getContract("crosschain", "L3Gateway", Network.L3);
-  const priceManager = getContract("price", "PriceManager", Network.L3);
-  const priceFetcher = getContract("order", "PriceFetcher", Network.L3);
-  const liquidation = getContract("liquidation", "Liquidation", Network.L3);
-  const funding = getContract("fee", "Funding", Network.L3);
-  const positionVault = getContract("position", "PositionVault", Network.L3);
-  const orderValidator = getContract("order", "OrderValidator", Network.L3);
-  const orderHistory = getContract("order", "OrderHistory", Network.L3);
+  const traderVault = getContract("account", "TraderVault", Network.BAOBAB);
+  const market = getContract("market", "Market", Network.BAOBAB);
+  const tokenInfo = getContract("market", "TokenInfo", Network.BAOBAB);
+  const listingManager = getContract("market", "ListingManager", Network.BAOBAB);
+  const risePool = getContract("risepool", "RisePool", Network.BAOBAB);
+  const globalState = getContract("global", "GlobalState", Network.BAOBAB);
+  const priceManager = getContract("price", "PriceManager", Network.BAOBAB);
+  const priceFetcher = getContract("order", "PriceFetcher", Network.BAOBAB);
+  const liquidation = getContract("liquidation", "Liquidation", Network.BAOBAB);
+  const funding = getContract("fee", "Funding", Network.BAOBAB);
+  const positionVault = getContract("position", "PositionVault", Network.BAOBAB);
+  const orderValidator = getContract("order", "OrderValidator", Network.BAOBAB);
+  const orderHistory = getContract("order", "OrderHistory", Network.BAOBAB);
   const positionHistory = getContract(
     "position",
     "PositionHistory",
-    Network.L3
+    Network.BAOBAB
   );
-  const positionFee = getContract("fee", "PositionFee", Network.L3);
+  const positionFee = getContract("fee", "PositionFee", Network.BAOBAB);
   const positionManager = getContract(
     "position",
     "PositionManager",
-    Network.L3
+    Network.BAOBAB
   );
-  const marketOrder = getContract("order", "MarketOrder", Network.L3);
-  const orderBook = getContract("orderbook", "OrderBook", Network.L3);
-  const orderRouter = getContract("order", "OrderRouter", Network.L3);
-  const priceMaster = getContract("price", "PriceMaster", Network.L3);
+  const marketOrder = getContract("order", "MarketOrder", Network.BAOBAB);
+  const orderBook = getContract("orderbook", "OrderBook", Network.BAOBAB);
+  const orderRouter = getContract("order", "OrderRouter", Network.BAOBAB);
 
   return {
     mathUtils,
@@ -55,7 +53,6 @@ export function getContractsContext() {
     listingManager,
     risePool,
     globalState,
-    l3Gateway,
     priceManager,
     priceFetcher,
     liquidation,
@@ -69,6 +66,5 @@ export function getContractsContext() {
     marketOrder,
     orderBook,
     orderRouter,
-    priceMaster,
   };
 }

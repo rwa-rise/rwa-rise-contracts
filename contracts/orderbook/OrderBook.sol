@@ -19,7 +19,7 @@ import "../global/GlobalState.sol";
 import "../market/TokenInfo.sol";
 import "./OrderBookBase.sol";
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract OrderBook is OrderBookBase, OrderExecutor, Modifiers {
     using MathUtils for int256;
@@ -173,9 +173,9 @@ contract OrderBook is OrderBookBase, OrderExecutor, Modifiers {
 
             // PBC = PRICE_BUFFER_CHANGE_CONSTANT
             // _interimMarkPrice * PBC * (sizeCap) = (price shift) = (_limitPriceIterator - _interimMarkPrice)
-            console.log("\n>>> >>> >>> While loop");
-            console.log("maxBidPrice: ", maxBidPrice[_marketId]);
-            console.log("minAskPrice: ", minAskPrice[_marketId]);
+            // console.log("\n>>> >>> >>> While loop");
+            // console.log("maxBidPrice: ", maxBidPrice[_marketId]);
+            // console.log("minAskPrice: ", minAskPrice[_marketId]);
 
             PriceTickIterationContext memory ptc;
 
@@ -222,12 +222,12 @@ contract OrderBook is OrderBookBase, OrderExecutor, Modifiers {
                 ) /
                 priceFetcher._getIndexPrice(_marketId));
 
-            console.log("Price: ", ic.limitPriceIterator / 1e20, "USD\n");
+            // console.log("Price: ", ic.limitPriceIterator / 1e20, "USD\n");
 
             ptc.isPartialForThePriceTick =
                 ptc.sizeCap <
                 orderSizeForPriceTick[_marketId][ic.limitPriceIterator];
-            console.log(">>> isPartial:", ptc.isPartialForThePriceTick);
+            // console.log(">>> isPartial:", ptc.isPartialForThePriceTick);
 
             ptc.fillAmount = ptc.isPartialForThePriceTick
                 ? ptc.sizeCap // sizeCap 남아있는만큼 체결하고 종료
@@ -284,7 +284,7 @@ contract OrderBook is OrderBookBase, OrderExecutor, Modifiers {
             }
 
             if (ptc.isPartialForThePriceTick) {
-                console.log(">>> Exit: Partial Order");
+                // console.log(">>> Exit: Partial Order");
                 break;
             } else {
                 // If `isPartial = false` and all the orders in the price tick are filled (empty order book for the price tick),
@@ -317,12 +317,12 @@ contract OrderBook is OrderBookBase, OrderExecutor, Modifiers {
                 ? ic.limitPriceIterator >= ic.interimMarkPrice
                 : ic.limitPriceIterator < ic.interimMarkPrice;
 
-            console.log(
-                "+++++++++ limitPriceIterator: ",
-                ic.limitPriceIterator
-            );
-            console.log("+++++++++ interimMarkPrice: ", ic.interimMarkPrice);
-            console.log("+++++++++ updated loopCondition: ", ic.loopCondition);
+            // console.log(
+            //     "+++++++++ limitPriceIterator: ",
+            //     ic.limitPriceIterator
+            // );
+            // console.log("+++++++++ interimMarkPrice: ", ic.interimMarkPrice);
+            // console.log("+++++++++ updated loopCondition: ", ic.loopCondition);
         }
     }
 

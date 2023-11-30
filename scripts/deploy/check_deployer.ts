@@ -9,7 +9,7 @@ async function main() {
   console.log(
     "Account balance:",
     ethers.utils.formatEther((await deployer.getBalance()).toString()),
-    "ETH"
+    "KLAY"
   );
   console.log("---------------------------------------------");
 }

@@ -8,12 +8,14 @@ export async function setMarketMaxCapacities() {
   const c = new Constants();
   const p = new Params();
 
-  await ctx.positionVault.setMaxLongCapacity(
+  const tx1 = await ctx.positionVault.setMaxLongCapacity(
     c.ETH_USDC_MARKET_ID,
     p.MAX_LONG_CAPACITY
   );
-  await ctx.positionVault.setMaxShortCapacity(
+  await tx1.wait();
+  const tx2 = await ctx.positionVault.setMaxShortCapacity(
     c.ETH_USDC_MARKET_ID,
     p.MAX_SHORT_CAPACITY
   );
+  await tx2.wait();
 }

@@ -72,24 +72,26 @@ contract PriceManager {
         uint256 _indexPrice = getIndexPrice(_marketId);
         require(_indexPrice > 0, "PriceManager: price not set");
 
-        // size as OpenInterestDiff change
-        int256 openInterestDelta = _isBuy
-            ? (_size).toInt256()
-            : -(_size).toInt256();
+        // // size as OpenInterestDiff change
+        // int256 openInterestDelta = _isBuy
+        //     ? (_size).toInt256()
+        //     : -(_size).toInt256();
 
-        int256 priceBufferChange = _calculatePriceBuffer(
-            _marketId,
-            openInterestDelta
-        );
+        // int256 priceBufferChange = _calculatePriceBuffer(
+        //     _marketId,
+        //     openInterestDelta
+        // );
 
-        int256 avgPriceBuffer = (getPriceBuffer(_marketId) +
-            priceBufferChange) / 2;
+        // int256 avgPriceBuffer = (getPriceBuffer(_marketId) +
+        //     priceBufferChange) / 2;
 
-        int256 avgExecPrice = (_indexPrice).toInt256() +
-            ((_indexPrice).toInt256() * avgPriceBuffer) /
-            (PRICE_BUFFER_PRECISION).toInt256();
+        // int256 avgExecPrice = (_indexPrice).toInt256() +
+        //     ((_indexPrice).toInt256() * avgPriceBuffer) /
+        //     (PRICE_BUFFER_PRECISION).toInt256();
+        
+        int256 avgExecPrice = (_indexPrice).toInt256();
 
-        require(avgExecPrice > 0, "PriceManager: avgExecPrice <= 0");
+        // require(avgExecPrice > 0, "PriceManager: avgExecPrice <= 0");
 
         return (avgExecPrice).toUint256();
     }

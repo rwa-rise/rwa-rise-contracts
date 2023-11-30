@@ -30,7 +30,8 @@ export async function getOpenPosition(
 async function main() {
   const c = new Constants();
   const deployer = getPresetAddress("deployer");
-  await getOpenPosition(deployer, false, c.ETH_USDC_MARKET_ID);
+  await getOpenPosition(deployer, true, c.ETH_USDC_MARKET_ID);
+  await getOpenPosition("0x9612a025BF766d18B1cF7333f945DcBb237656ba", true, c.ETH_USDC_MARKET_ID);
 }
 
 main().catch((error) => {

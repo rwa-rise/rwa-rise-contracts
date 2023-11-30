@@ -14,7 +14,7 @@ import "../market/TokenInfo.sol";
 import "../market/Market.sol";
 import "../utils/MathUtils.sol";
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract Funding {
     using SafeCast for int256;

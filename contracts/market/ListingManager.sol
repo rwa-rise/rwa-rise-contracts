@@ -7,7 +7,7 @@ import "../common/params.sol";
 
 import "../token/RM.sol";
 import "./Market.sol";
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 // Deals with listing new markets and updating existing ones
 // * Listing new markets

@@ -13,6 +13,7 @@ export async function _addLiquidities() {
     true,
     p.LONG_LIQUIDITY_AMOUNT
   );
+  await tx1.wait();
   console.log(">>> addLiquidity tx1:", tx1.hash.toString());
 
   const tx2 = await ctx.risePool.addLiquidity(
@@ -20,6 +21,7 @@ export async function _addLiquidities() {
     false,
     p.SHORT_LIQUIDITY_AMOUNT
   );
+  await tx2.wait();
 
   console.log(">>> addLiquidity tx2:", tx2.hash.toString());
 }

@@ -12,7 +12,7 @@ import "../risepool/RisePool.sol";
 import "../market/Market.sol";
 import "../fee/Funding.sol";
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract PnlManager {
     using SafeCast for uint256;

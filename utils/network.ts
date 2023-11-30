@@ -1,10 +1,7 @@
 export enum Network {
-  L2 = "L2",
-  L3 = "L3",
+  BAOBAB = "Baobab",
 }
 
 export enum RpcUrl {
-  L2 = "https://goerli-rollup.arbitrum.io/rpc",
-  // L3 = "http://localhost:8449",
-  L3 = "https://rpc.risefinance.io/",
+  BAOBAB = "https://public-en-baobab.klaytn.net/",
 }

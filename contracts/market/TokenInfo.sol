@@ -6,8 +6,6 @@ import "../common/structs.sol";
 
 import "./Market.sol";
 
-// FIXME: L2에만 배포하기
-
 contract TokenInfo {
     Market public market;
     uint256 public globalTokenIdCounter;

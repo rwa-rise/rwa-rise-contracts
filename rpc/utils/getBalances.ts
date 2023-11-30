@@ -4,19 +4,20 @@ import { getPresetAddress } from "../../utils/getPresetAddress";
 import { getContractAddress } from "../../utils/getContractAddress";
 import { Network } from "../../utils/network";
 
-// check test USDC balance on L2
+// check test USDC balance
 
 async function main() {
   try {
     // ========================= Set Contract  =========================
 
-    const traderVault = getContract("account", "TraderVault", Network.L3);
-    const tokenInfo = getContract("market", "TokenInfo", Network.L2);
+    const traderVault = getContract("account", "TraderVault", Network.BAOBAB);
+    const tokenInfo = getContract("market", "TokenInfo", Network.BAOBAB);
 
     // ==================== Call Contract Functions ====================
 
     const deployer = getPresetAddress("deployer");
-    const usdcAddress = getContractAddress("TestUSDC", Network.L2);
+    const usdcAddress = getContractAddress("TestUSDC", Network.BAOBAB);
+    console.log('>>> usdcAddress: ', usdcAddress)
 
     const usdcAssetId = await tokenInfo.getAssetIdFromTokenAddress(usdcAddress);
 
@@ -26,7 +27,7 @@ async function main() {
     );
     console.log("---------------------------------");
     console.log(
-      ">>> TraderVault.traderBalance on L3: ",
+      ">>> TraderVault.traderBalance: ",
       ethers.utils.formatEther(traderBalance),
       "tUSDC"
     );
