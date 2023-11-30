@@ -1,3 +1,3 @@
-# Rise Finance Core Contracts
+# RWA RISE Core Contracts for KlayMakers23 submission
 
-Rise Finance Core Contracts
+RAW RISE Core Contracts for KlayMakers23 submission
